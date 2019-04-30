@@ -9,14 +9,14 @@
 import React, {Component} from 'react';
 import {
   Platform, StyleSheet,
-  Text, View, FlatList, RefreshControl, ActivityIndicator,SwipeableFlatList
+  Text, View, FlatList, RefreshControl, ActivityIndicator, SwipeableFlatList, TouchableHighlight
 } from 'react-native';
 
 type Props = {};
 const CITY_NAMES = ['AA', 'FF', 'XC', 'XX', '2R', '2T2', 'RT', 'GG', 'HH', 'LL', 'PP', 'PP', 'PP', 'PP', 'PP',
   'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP',
   'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP'];
-export default class FlatListDemo extends Component<Props> {
+export default class SwipeableFlatListDemo extends Component<Props> {
 
   constructor(props) {
     super(props);
@@ -65,10 +65,22 @@ export default class FlatListDemo extends Component<Props> {
     </View>
   }
 
+  renderQuickActionsView() {
+    return <View style={styles.quickContainer}>
+      <TouchableHighlight onPress={() => {
+        alert('确认删除？')
+      }}>
+        <View style={styles.quick}>
+          <Text style={styles.touchableHighlightText}>删除</Text>
+        </View>
+      </TouchableHighlight>
+    </View>
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
+        <SwipeableFlatList
           data={this.state.dataArray}
           renderItem={(data) => this._renderItem(data)}
           // refreshing={this.state.isLoading}
@@ -89,6 +101,10 @@ export default class FlatListDemo extends Component<Props> {
           onEndReached={() => {
             this.loadData();
           }}
+
+          renderQuickActions={() => this.renderQuickActionsView()}
+          maxSwipeDistance={100}
+          bounceFirstRowOnMount={false}
         />
       </View>
     );
@@ -96,36 +112,58 @@ export default class FlatListDemo extends Component<Props> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  loadMoreView: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    alignItems: 'center',
-    padding: 10,
-  },
-  loadMoreViewText: {
-    marginLeft: 14,
-    fontSize: 12,
-    color: 'red',
-  },
-  renderItem: {
-    alignItems: 'center',
-    marginTop: 1,
-    flex: 1,
-    height: 50,
-    backgroundColor: '#789'
-  },
-});
+    container: {
+      flex: 1,
+      backgroundColor: '#F5FCFF',
+    },
+    welcome: {
+      fontSize: 20,
+      textAlign: 'center',
+      margin: 10,
+    },
+    instructions: {
+      textAlign: 'center',
+      color: '#333333',
+      marginBottom: 5,
+    },
+    loadMoreView: {
+      flexDirection: 'row',
+      alignSelf: 'center',
+      alignItems: 'center',
+      padding: 10,
+    },
+    loadMoreViewText: {
+      marginLeft: 14,
+      fontSize: 12,
+      color: 'red',
+    },
+    renderItem: {
+      alignItems: 'center',
+      marginTop: 1,
+      flex: 1,
+      height: 50,
+      backgroundColor: '#789'
+    },
+    touchableHighlightText: {
+      color: 'white',
+      fontSize: 16,
+    },
+    quick: {
+      backgroundColor: 'red',
+      flex: 1,
+      alignItems: 'flex-end',
+      alignSelf: 'center',
+      justifyContent: 'center',
+      padding: 10,
+      width: 120,
+    },
+
+    quickContainer: {
+      flex: 1,
+      height: 50,
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      marginBottom: 15,
+    },
+  })
+;

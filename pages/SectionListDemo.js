@@ -9,13 +9,24 @@
 import React, {Component} from 'react';
 import {
   Platform, StyleSheet,
-  Text, View, FlatList, RefreshControl, ActivityIndicator,SwipeableFlatList
+  Text, View, FlatList, RefreshControl, ActivityIndicator, SwipeableFlatList, SectionList
 } from 'react-native';
 
 type Props = {};
-const CITY_NAMES = ['AA', 'FF', 'XC', 'XX', '2R', '2T2', 'RT', 'GG', 'HH', 'LL', 'PP', 'PP', 'PP', 'PP', 'PP',
-  'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP',
-  'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP'];
+const CITY_NAMES = [{
+  data: ['AA', 'FF', 'XC', 'XX', '2R', '2T2', 'RT', 'GG', 'HH', 'LL', '嘎嘎嘎', '嘎嘎嘎', '嘎嘎嘎', '嘎嘎嘎', '嘎嘎嘎'],
+  title: '一一一一'
+}, {
+  data: ['PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP', 'PP'],
+  title: '二二二'
+}, {
+  data: ['WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW', 'WWW'],
+  title: '三三三'
+}, {
+  data: ['UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU', 'UUU'],
+  title: '七七七'
+},
+];
 export default class FlatListDemo extends Component<Props> {
 
   constructor(props) {
@@ -36,15 +47,22 @@ export default class FlatListDemo extends Component<Props> {
 
     setTimeout(() => {
       let dataArr = [];
-      for (let i = 0; i < 10; i++) {
-        dataArr.push('新数据：' + i + ' 时间：' + new Date().getTime());
+      for (let j = 0; j < 5; j++) {
+        let newData = {
+          title: "WQW",
+          data: []
+        };
+        newData.title = '标题：' + j;
+        for (let i = 0; i < 10; i++) {
+          newData.data.push('新数据：' + i + ' 时间：' + new Date().getTime());
+        }
+        dataArr.push(newData);
       }
       let newVar = refreshing === true ? [...dataArr, ...this.state.dataArray] : [...this.state.dataArray, ...dataArr];
       this.setState({
         dataArray: newVar,
         isLoading: false,
       })
-
     }, 2000)
   }
 
@@ -65,11 +83,17 @@ export default class FlatListDemo extends Component<Props> {
     </View>
   }
 
+  _renderSectionHeaderView({section}) {
+    return <View style={{flex: 1, backgroundColor: 'deeppink', height: 22}}>
+      <Text style={{fontSize: 12}}>{section.title}</Text>
+    </View>
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <FlatList
-          data={this.state.dataArray}
+        <SectionList
+          sections={this.state.dataArray}
           renderItem={(data) => this._renderItem(data)}
           // refreshing={this.state.isLoading}
           // onRefresh={() => this.loadData()}
@@ -89,6 +113,12 @@ export default class FlatListDemo extends Component<Props> {
           onEndReached={() => {
             this.loadData();
           }}
+
+          renderSectionHeader={(data) => this._renderSectionHeaderView(data)}
+
+          ItemSeparatorComponent={() => <View style={{flex: 1, height: 1, backgroundColor: 'gray'}}/>}
+
+
         />
       </View>
     );
@@ -123,7 +153,6 @@ const styles = StyleSheet.create({
   },
   renderItem: {
     alignItems: 'center',
-    marginTop: 1,
     flex: 1,
     height: 50,
     backgroundColor: '#789'

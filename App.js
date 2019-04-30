@@ -25,6 +25,14 @@ export default class App extends Component<Props> {
         <Button title={'FlatListDemo'} onPress={() => {
           navigation.navigate('FlatListDemo');
         }}/>
+
+        <Button style={{marginTop: 30}} title={'SwipeableFlatListDemo'} onPress={() => {
+          navigation.navigate('SwipeableFlatList');
+        }}/>
+
+        <Button style={{marginTop: 30}} title={'SectionListDemo'} onPress={() => {
+          navigation.navigate('SectionListDemo');
+        }}/>
       </View>
     );
   }
@@ -33,8 +41,6 @@ export default class App extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {

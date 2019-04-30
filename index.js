@@ -7,6 +7,8 @@ import App from './App';
 import {name as appName} from './app.json';
 import {createStackNavigator, createAppContainer} from 'react-navigation';
 import FlatListDemo from './pages/FlatListDemo';
+import SwipeableFlatListDemo from './pages/SwipeableFlatListDemo';
+import SectionListDemo from './pages/SectionListDemo';
 
 /**
  * {StackNavigator}已经无法使用了，请使用{createStackNavigator}
@@ -36,6 +38,19 @@ const AppRoot = createStackNavigator({
     screen: FlatListDemo,
     navigationOptions: {title: 'FlatListDemo'}
   },
+  SwipeableFlatList: {
+    screen: SwipeableFlatListDemo,
+    navigationOptions: {
+      title: 'SwipeableFlatListDemo'
+    }
+  },
+  SectionListDemo: {
+    screen: SectionListDemo,
+    navigationOptions: {
+      title: 'SectionListDemo'
+    }
+  },
+
 });
 
 const appContainer = createAppContainer(AppRoot);
