@@ -7,7 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, FlatList} from 'react-native';
+import {
+  Platform, StyleSheet,
+  Text, View, FlatList, RefreshControl, ActivityIndicator
+} from 'react-native';
 
 type Props = {};
 const CITY_NAMES = ['AA', 'FF', 'XC', 'XX', '2R', '2T2', 'RT', 'GG', 'HH', 'LL', 'PP', 'PP', 'PP', 'PP', 'PP',
@@ -23,37 +26,44 @@ export default class FlatListDemo extends Component<Props> {
     }
   }
 
-  loadData() {
-    this.setState({
-        isLoading: true,
-      }
-    );
+  loadData(refreshing) {
+    if (refreshing) {
+      this.setState({
+          isLoading: true,
+        }
+      );
+    }
 
     setTimeout(() => {
       let dataArr = [];
       for (let i = 0; i < 10; i++) {
         dataArr.push('新数据：' + i + ' 时间：' + new Date().getTime());
       }
+      let newVar = refreshing === true ? [...dataArr, ...this.state.dataArray] : [...this.state.dataArray, ...dataArr];
       this.setState({
-        dataArray: [...dataArr, ...this.state.dataArray],
-        isLoading: false
+        dataArray: newVar,
+        isLoading: false,
       })
+
     }, 2000)
   }
 
 
   _renderItem(data) {
     return <View>
-      <Text style={{
-        alignItems: 'center',
-        marginTop: 1,
-        flex: 1,
-        height: 50,
-        textColor: '#567',
-        backgroundColor: '#789'
-      }}>{data.item}</Text>
+      <Text style={styles.renderItem}>{data.item}</Text>
     </View>
   };
+
+  loadMoreView() {
+    return <View style={styles.loadMoreView}>
+      <ActivityIndicator
+        size={'small'}
+        color={'red'}
+        animating={true}/>
+      <Text style={styles.loadMoreViewText}>正在加载更多...</Text>
+    </View>
+  }
 
   render() {
     return (
@@ -61,8 +71,24 @@ export default class FlatListDemo extends Component<Props> {
         <FlatList
           data={this.state.dataArray}
           renderItem={(data) => this._renderItem(data)}
-          refreshing={this.state.isLoading}
-          onRefresh={() => this.loadData()}
+          // refreshing={this.state.isLoading}
+          // onRefresh={() => this.loadData()}
+          refreshControl={
+            <RefreshControl
+              //ios
+              title={'加载中'}
+              tintColor={'orange'}
+              titleColor={'red'}
+              //android
+              color={['red', 'orange', 'peachpuff', 'lavender']}
+              refreshing={this.state.isLoading}
+              onRefresh={() => this.loadData(true)}
+            />
+          }
+          ListFooterComponent={() => this.loadMoreView()}
+          onEndReached={() => {
+            this.loadData();
+          }}
         />
       </View>
     );
@@ -83,5 +109,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  loadMoreView: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  loadMoreViewText: {
+    marginLeft: 14,
+    fontSize: 12,
+    color: 'red',
+  },
+  renderItem: {
+    alignItems: 'center',
+    marginTop: 1,
+    flex: 1,
+    height: 50,
+    backgroundColor: '#789'
   },
 });
